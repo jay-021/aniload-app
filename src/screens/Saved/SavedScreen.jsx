@@ -8,16 +8,13 @@ const SavedScreen = () => {
 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [mount, setMount] = useState(false);
   const baseUrl = "https://api.jikan.moe/v4";
   const isFocused = useIsFocused();
 
-  // console.log("isFocused", isFocused);
-
   useEffect(() => {
       fetchData()
-  }, [mount, /* isFocused */]);
-
+  }, []);
+  
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -46,7 +43,6 @@ const SavedScreen = () => {
     
        setData(updatedArray);
       setIsLoading(false);
-      setMount(false)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -57,10 +53,10 @@ const SavedScreen = () => {
 
   const renderDataCards = () => {
 
-    const handleFavourite = async (anime, like) => {
+    const handleFavourite = async (Aniload, like) => {
       const resData = [...data];
       const updatedResData = resData.map((item) => {
-        if (item.mal_id === anime.mal_id) {
+        if (item.mal_id === Aniload.mal_id) {
           return { ...item, favourite: like ? true : false }
         }
         return item;
@@ -69,34 +65,33 @@ const SavedScreen = () => {
       
       const payload = {
         favourite: like,
-        id: anime.mal_id
+        id: Aniload.mal_id
       }
       try {
         const response = await axios.post(`/post/create`, payload)
         if (response.status === 200) {
-          setMount(true)
+          fetchData()
         }
         
       } catch (error) {
-        setMount(false)
         console.log(error);
       }
     }
 
     return (
       <View style={styles.cardsContainer}>
-        {data.map((anime, index) => (
+        {data.map((Aniload, index) => (
           <View key={index} style={styles.card}>
             <TouchableOpacity>
-              <Image source={{ uri: anime.images.jpg.large_image_url }} style={{ width: '100%', height: 160, objectFit: 'contain' }} />
+              <Image source={{ uri: Aniload.images.jpg.large_image_url }} style={{ width: '100%', height: 160, objectFit: 'contain' }} />
             </TouchableOpacity>
             <View style={{ position: 'absolute', top: 7, right: 3 }}>
-            {anime.favourite ? (
-                <TouchableOpacity onPress={() => handleFavourite(anime, false)}>
+            {Aniload.favourite ? (
+                <TouchableOpacity onPress={() => handleFavourite(Aniload, false)}>
                   <Icon name="heart" size={25} color="#900" />
                 </TouchableOpacity>
               ) : (
-                <TouchableOpacity onPress={() => handleFavourite(anime, true)}>
+                <TouchableOpacity onPress={() => handleFavourite(Aniload, true)}>
                  <Icon name="heart-o" size={25} color="#900" />
                 </TouchableOpacity>
               )}

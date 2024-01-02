@@ -16,10 +16,10 @@ const HomeScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-   if (searchQuery.length === 0 && isFocused) {
+   if (searchQuery.length === 0 /* && isFocused */) {
      fetchData()
    }
-  }, [searchQuery, isFocused])
+  }, [searchQuery, /* isFocused */])
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -95,10 +95,10 @@ const HomeScreen = ({ navigation }) => {
 
   const renderDataCards = () => {
 
-    const handleFavourite = async (anime, like) => {
+    const handleFavourite = async (Aniload, like) => {
       const resData = [...data];
       const updatedResData = resData.map((item) => {
-        if (item.mal_id === anime.mal_id) {
+        if (item.mal_id === Aniload.mal_id) {
           return { ...item, favourite: like ? true : false }
         }
         return item;
@@ -107,7 +107,7 @@ const HomeScreen = ({ navigation }) => {
 
       const payload = {
         favourite: like,
-        id: anime.mal_id
+        id: Aniload.mal_id
       }
       try {
         const response = await axios.post(`/post/create`, payload)
@@ -116,20 +116,26 @@ const HomeScreen = ({ navigation }) => {
       }
     }
 
+    const handleCardPress = (Aniload) => {
+      navigation.navigate('DetailsScreen', {
+        id: Aniload.mal_id, 
+      });
+    };
+
     return (
       <View style={styles.cardsContainer}>
-        {data.map((anime, index) => (
+        {data.map((Aniload, index) => (
           <View key={index} style={styles.card}>
-            <TouchableOpacity>
-              <Image source={{ uri: anime.images.jpg.large_image_url }} style={{ width: '100%', height: 160, objectFit: 'contain' }} />
+            <TouchableOpacity onPress={() => handleCardPress(Aniload)} >
+              <Image source={{ uri: Aniload?.images?.jpg?.large_image_url }} style={{ width: '100%', height: 160, objectFit: 'contain' }} />
             </TouchableOpacity>
             <View style={{ position: 'absolute', top: 7, right: 3 }}>
-              {anime.favourite ? (
-                <TouchableOpacity onPress={() => handleFavourite(anime, false)}>
+              {Aniload.favourite ? (
+                <TouchableOpacity onPress={() => handleFavourite(Aniload, false)}>
                   <Icon name="heart" size={25} color="#900" />
                 </TouchableOpacity>
               ) : (
-                <TouchableOpacity onPress={() => handleFavourite(anime, true)}>
+                <TouchableOpacity onPress={() => handleFavourite(Aniload, true)}>
                  <Icon name="heart-o" size={25} color="#900" />
                 </TouchableOpacity>
               )}

@@ -8,6 +8,7 @@ import LoginScreen from './src/screens/Login/LoginScreen';
 import SignupScreen from './src/screens/SignUp/SignupScreen';
 import SplashScreen from './src/screens/Splash/SplashScreen';
 import SavedScreen from './src/screens/Saved/SavedScreen';
+import DetailsScreen from './src/screens/Home/DetailsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,6 +43,7 @@ function App() {
         <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="DetailsScreen" component={DetailsScreen} options={{ headerShown: false }} />
         <Stack.Screen
           name="MainTabs"
           component={MainTabNavigator}

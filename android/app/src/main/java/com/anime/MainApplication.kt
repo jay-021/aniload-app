@@ -1,4 +1,4 @@
-package com.anime
+package com.Aniload
 
 import android.app.Application
 import com.facebook.react.PackageList
