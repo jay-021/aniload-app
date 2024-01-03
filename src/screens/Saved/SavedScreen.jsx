@@ -9,11 +9,13 @@ const SavedScreen = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const baseUrl = "https://api.jikan.moe/v4";
-  const isFocused = useIsFocused();
+const isFocused = useIsFocused();
 
   useEffect(() => {
+    setTimeout(() => {
       fetchData()
-  }, []);
+    }, 500);
+  }, [isFocused]);
   
   const fetchData = async () => {
     setIsLoading(true);
@@ -61,7 +63,9 @@ const SavedScreen = () => {
         }
         return item;
       })
-      setData(updatedResData)
+
+      const filteredData = updatedResData.filter(item => item.favourite);
+      setData(filteredData)
       
       const payload = {
         favourite: like,
@@ -70,7 +74,9 @@ const SavedScreen = () => {
       try {
         const response = await axios.post(`/post/create`, payload)
         if (response.status === 200) {
-          fetchData()
+          setTimeout(() => {
+            fetchData()
+          }, 1000);
         }
         
       } catch (error) {
@@ -80,7 +86,7 @@ const SavedScreen = () => {
 
     return (
       <View style={styles.cardsContainer}>
-        {data.map((Aniload, index) => (
+        {data?.map((Aniload, index) => (
           <View key={index} style={styles.card}>
             <TouchableOpacity>
               <Image source={{ uri: Aniload.images.jpg.large_image_url }} style={{ width: '100%', height: 160, objectFit: 'contain' }} />
@@ -98,6 +104,9 @@ const SavedScreen = () => {
             </View>
           </View>
         ))}
+        {
+          data.length === 0 && <Text>Results Not Found</Text>
+        }
       </View>
     );
   };

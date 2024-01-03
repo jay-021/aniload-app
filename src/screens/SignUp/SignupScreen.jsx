@@ -29,6 +29,8 @@ const SignUp = () => {
         handleClear()
         setErrors({});
         console.log("Signup successfully")
+      }else{
+        setErrors({ general: "Failed to sign up. Please try again." });
       }
       console.log(payload);
     } catch (error) {
@@ -40,7 +42,7 @@ const SignUp = () => {
         setErrors(validationErrors);
       } else {
         console.error("API error:", error);
-        setErrors({ general: "Failed to sign in. Please try again." });
+        setErrors({ general: "Failed to sign up. Please try again." });
       }
     } 
   };

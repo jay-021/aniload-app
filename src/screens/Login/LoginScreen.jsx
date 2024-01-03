@@ -29,7 +29,7 @@ const LoginScreen = () => {
               handleClear()
               console.log("Signin successfully")
         }else{
-          setErrors({});
+          setErrors({ general: "Failed to sign in. Please try again." });
         }
     } catch (error) {
       if (error.inner) {

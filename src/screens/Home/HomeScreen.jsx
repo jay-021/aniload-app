@@ -16,10 +16,12 @@ const HomeScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-   if (searchQuery.length === 0 /* && isFocused */) {
-     fetchData()
-   }
-  }, [searchQuery, /* isFocused */])
+   if (searchQuery.length === 0 && isFocused) {
+    setTimeout(() => { 
+      fetchData()
+    }, 500);
+       }
+  }, [searchQuery, isFocused])
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -59,6 +61,7 @@ const HomeScreen = ({ navigation }) => {
   const handleLogout = async () => {
     await removeTokenFromStorage();
     navigation.navigate('Login');
+    setIsLogout(false)
   };
 
   const removeTokenFromStorage = async () => {
@@ -78,18 +81,6 @@ const HomeScreen = ({ navigation }) => {
         <Icon name="user" paddingHorizontal={10}  size={30} color="#900" />
         </View>
       </TouchableOpacity>
-    );
-  };
-
-  const renderUserProfile = () => {
-    return (
-      <View style={styles.profileContainer}>
-        {userProfile ? (
-          <Text>{`Welcome, ${userProfile.name}!`}</Text>
-        ) : (
-          <ActivityIndicator size="small" color="#0000ff" />
-        )}
-      </View>
     );
   };
 
@@ -124,7 +115,7 @@ const HomeScreen = ({ navigation }) => {
 
     return (
       <View style={styles.cardsContainer}>
-        {data.map((Aniload, index) => (
+        {data?.map((Aniload, index) => (
           <View key={index} style={styles.card}>
             <TouchableOpacity onPress={() => handleCardPress(Aniload)} >
               <Image source={{ uri: Aniload?.images?.jpg?.large_image_url }} style={{ width: '100%', height: 160, objectFit: 'contain' }} />
@@ -142,6 +133,9 @@ const HomeScreen = ({ navigation }) => {
             </View>
           </View>
         ))}
+        {
+          data.length === 0 && <Text>Results Not Found</Text>
+        }
       </View>
     );
   };
